@@ -1,42 +1,30 @@
-import React, { Component, useState } from "react";
+import React, {  useEffect, useState } from "react";
 import '../styles/App.css';
 
-class App extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            renderBall: false,
-            posi : 0,
-            ballPosition: { left: "0px" }
-        };
-        this.renderChoice = this.renderBallOrButton.bind(this)
-        this.buttonClickHandler = this.buttonClickHandler.bind(this)
-    };
 
-    buttonClickHandler() {
-   
-   }
-    renderBallOrButton() {
-		if (this.state.renderBall) {
-		    return <div className="ball" style={this.state.ballPosition}></div>
-		} else {
-		    return <button onClick={this.buttonClickHandler} >Click For One Ball</button>
-		}
+function App() {
+    const [renderBall, setRenderBall] = useState(false);
+    const [position, setPosition] = useState(0);
+    const [ballPosition, setBallPosition] = useState({ left: 0 });
+  
+    function buttonClickHandler() {
+      setRenderBall(true);
     }
-
-    // bind ArrowRight keydown event
-    componentDidMount() {
-      
+    function renderBallOrButton() {
+      if (renderBall) {
+        return <div className="ball" style={{position:"absolute",left:ballPosition.left}}></div>;
+      } else {
+        return <button onClick={buttonClickHandler}>Click For One Ball</button>;
+      }
     }
-
-    render() {
-        return (
-            <div className="playground">
-                {this.renderBallOrButton()}
-            </div>
-        )
-    }
-}
-
-
-export default App;
+    useEffect(() => {
+      document.addEventListener("keydown", function (event) {
+        if (event.key === "ArrowRight") {
+          setBallPosition(previousState=>({left:previousState.left+5}))
+        }
+      });
+    }, []);
+    return <div className="playground">{renderBallOrButton()}</div>;
+  }
+  export default App;
+  
